@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/StatusLocker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="81dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/inter_bold"
+        android:text="Status Locker"
+        android:textColor="#000000"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/statusNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="."
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/YourLocker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="168dp"
+        android:fontFamily="@font/inter_bold"
+        android:text="Your Locker"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/StatusLocker" />
+
+    <TextView
+        android:id="@+id/lockerNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="177dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="178dp"
+        android:fontFamily="@font/inter_bold"
+        android:text="01"
+        android:textSize="50sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/YourLocker" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/garis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lockerNumber">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:minHeight="3dp"
+
+            />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/BookingDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="138dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="139dp"
+        android:fontFamily="@font/inter_bold"
+        android:text="Booking Date : "
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/garis" />
+
+    <TextView
+        android:id="@+id/CurrentDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="121dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="121dp"
+        android:fontFamily="@font/inter_bold"
+        android:text="Current Date"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BookingDate" />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="182dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="183dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/inter_bold"
+        android:text="TIME"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/stopwatch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CurrentDate" />
+
+    <Chronometer
+        android:id="@+id/stopwatch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="158dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="159dp"
+        android:fontFamily="@font/inter_bold"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/garis2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stopwatch">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black"
+            android:minHeight="3dp" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="34dp"
+        android:layout_marginBottom="13dp"
+        android:background="#FFFFFF"
+        android:fontFamily="@font/inter_bold"
+        android:text="OPEN"
+        android:textColor="#198303"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/garis2" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="129dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="13dp"
+        android:background="@drawable/rounded_button_orange"
+        android:fontFamily="@font/inter_bold"
+        android:text="Lock"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statusText" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu_item"
+        app:itemTextColor="@drawable/navbar_color"
+        app:itemIconTint="@drawable/navbar_color"
+        android:background="@drawable/rounded_navbar"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RequestActivity">
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="48dp"
+        android:text="TextView"
+        android:textAllCaps="false"
+        android:textColor="#004E64"
+        android:textSize="50sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/requestButton"
+        android:layout_width="283dp"
+        android:layout_height="81dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginEnd="46dp"
+        android:layout_marginBottom="232dp"
+        android:background="@drawable/rounded_button_orange"
+        android:fontFamily="@font/inter_bold"
+        android:text="Request\nLocker"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.513"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="105dp"
+        android:layout_marginEnd="106dp"
+        android:fontFamily="@font/inter_bold"
+        android:text="Do you want request locker ?"
+        android:textAllCaps="false"
+        android:textColor="#004E64"
+        app:layout_constraintBottom_toTopOf="@+id/requestButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="123dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="124dp"
+        android:alpha="20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userName"
+        app:srcCompat="@drawable/logo_mylocker" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu_item"
+        app:itemTextColor="@drawable/navbar_color"
+        app:itemIconTint="@drawable/navbar_color"
+        android:background="@drawable/rounded_navbar"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

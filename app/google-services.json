@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "538743905147",
+    "firebase_url": "https://lokerkufirebase-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "lokerkufirebase",
+    "storage_bucket": "lokerkufirebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538743905147:android:876d219ad870df3305fbde",
+        "android_client_info": {
+          "package_name": "com.example.lokerku"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "538743905147-glfhcatjamhi6i25hca00ica7mkf6789.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEGTZFAiPJlZLqGXunyGbbvz3ggyFTFTU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "538743905147-glfhcatjamhi6i25hca00ica7mkf6789.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
