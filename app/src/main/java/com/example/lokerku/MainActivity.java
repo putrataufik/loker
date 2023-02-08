@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Randomize Locker Number
         Random rand = new Random();
-        int randomNum = rand.nextInt((10 - 1) + 1) + 1;
+        int randomNum = rand.nextInt((2- 1) + 1) + 1;
         lockerNumber.setText(String.valueOf(randomNum));
 
         // Set Current Date
