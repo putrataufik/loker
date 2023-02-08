@@ -29,7 +29,7 @@ public class RequestActivity extends AppCompatActivity {
         getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_request);
+        setContentView(R.layout.activity_request);g545tr23r
 
         // Declare
         TextView userName = findViewById(R.id.userName);
