@@ -59,13 +59,13 @@ public class RequestActivity extends AppCompatActivity {
                         Intent intent = new Intent(RequestActivity.this, MainActivity.class);
                         startActivity(intent);
                     }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
                     }
-                }).setTitle(Html.fromHtml("<font color = '#ffffff'>"+"<b>KONFIRMASI</b>"+"</font>")).
-                        setMessage(Html.fromHtml("<font color = '#ffffff'>"+"Apakah Anda Yakin Ingin Request?"+"</font>"));
+                }).setTitle(Html.fromHtml("<font color = '#ffffff'>"+"<b>Confirmation</b>"+"</font>")).
+                        setMessage(Html.fromHtml("<font color = '#ffffff'>"+"Do You Want to Request a Locker?"+"</font>"));
 
 
                 AlertDialog dialog= builder.create();

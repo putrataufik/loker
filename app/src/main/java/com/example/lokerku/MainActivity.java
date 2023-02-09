@@ -175,8 +175,8 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
                         }
-                    }).setTitle(Html.fromHtml("<font color = '#ffffff'>"+"<b>Apakah anda yakin ingin mengunci locker Anda ?</b>"+"</font>")).
-                            setMessage(Html.fromHtml("<font color = '#ffffff'>"+"Pastikan Anda sudah memasukan barang Anda dan Menutup locker dengan benar !!!"+"</font>"));
+                    }).setTitle(Html.fromHtml("<font color = '#ffffff'>"+"<b>Do You Want to Lock Your Locker?</b>"+"</font>")).
+                            setMessage(Html.fromHtml("<font color = '#ffffff'>"+"Make Sure You Put Your Things Inside the Locker and Close Locker Door Tightly"+"</font>"));
 
 
                     AlertDialog dialog= builder.create();
@@ -233,7 +233,8 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
 
                         }
-                    }).setTitle(Html.fromHtml("<font color = '#ffffff'>"+"<b>Apakah anda yakin ingin membuka locker Anda ?</b>"+"</font>"));
+                    }).setTitle(Html.fromHtml("<font color = '#ffffff'>"+"<b>Do You Want to Unlock Your Locker?</b>"+"</font>")).
+                            setMessage(Html.fromHtml("<font color = '#ffffff'>"+"Make Sure You are Near to the Locker"+"</font>"));
 
 
                 AlertDialog dialog= builder.create();
