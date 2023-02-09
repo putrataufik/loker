@@ -116,12 +116,12 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed(){
         // Alert Dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-        builder.setPositiveButton("Request", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         finishAffinity();
                     }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
