@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,12 +29,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+
+public class mainActivity extends AppCompatActivity {
     // Declare Items
     private final Handler handler = new Handler();
     private TextView statusNumber;
@@ -139,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 if (statusChanges.equals("OPEN")) {
 
                     // Alert Dialog
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity.this);
                     builder.setPositiveButton("Lock", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -162,12 +161,12 @@ public class MainActivity extends AppCompatActivity {
                             database.child("statusValue").setValue(1).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    Toast.makeText(MainActivity.this, "Locked", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mainActivity.this, "Locked", Toast.LENGTH_SHORT).show();
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(MainActivity.this, "Failed to Lock", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mainActivity.this, "Failed to Lock", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -195,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                 else {
 
                     // Alert Dialog
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity.this);
                     builder.setPositiveButton("Unlock", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -217,13 +216,15 @@ public class MainActivity extends AppCompatActivity {
                             database.child("statusValue").setValue(0).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    Intent intent = new Intent(MainActivity.this, RequestActivity.class);
-                                    startActivity(intent);
+                                    navigateUpTo(new Intent(mainActivity.this, RequestActivity.class));
+//                                    finish();
+//                                    Intent intent = new Intent(mainActivity.this, RequestActivity.class);
+//                                    startActivity(intent);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(MainActivity.this, "Failed to Unlock", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mainActivity.this, "Failed to Unlock", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -235,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
                     }).setTitle(Html.fromHtml("<font color = '#ffffff'>"+"<b>Apakah anda yakin ingin membuka locker Anda ?</b>"+"</font>"));
 
 
-                    AlertDialog dialog= builder.create();
+                AlertDialog dialog= builder.create();
                     dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                         @Override
                         public void onShow(DialogInterface dialogInterface) {
