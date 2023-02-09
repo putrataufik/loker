@@ -34,7 +34,7 @@ import java.util.Date;
 import java.util.Random;
 
 
-public class mainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
     // Declare Items
     private final Handler handler = new Handler();
     private TextView statusNumber;
@@ -138,7 +138,7 @@ public class mainActivity extends AppCompatActivity {
                 if (statusChanges.equals("OPEN")) {
 
                     // Alert Dialog
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setPositiveButton("Lock", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -161,12 +161,12 @@ public class mainActivity extends AppCompatActivity {
                             database.child("statusValue").setValue(1).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    Toast.makeText(mainActivity.this, "Locked", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "Locked", Toast.LENGTH_SHORT).show();
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(mainActivity.this, "Failed to Lock", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "Failed to Lock", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -194,7 +194,7 @@ public class mainActivity extends AppCompatActivity {
                 else {
 
                     // Alert Dialog
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setPositiveButton("Unlock", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -216,7 +216,7 @@ public class mainActivity extends AppCompatActivity {
                             database.child("statusValue").setValue(0).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    navigateUpTo(new Intent(mainActivity.this, RequestActivity.class));
+                                    navigateUpTo(new Intent(MainActivity.this, RequestActivity.class));
 //                                    finish();
 //                                    Intent intent = new Intent(mainActivity.this, RequestActivity.class);
 //                                    startActivity(intent);
@@ -224,7 +224,7 @@ public class mainActivity extends AppCompatActivity {
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(mainActivity.this, "Failed to Unlock", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "Failed to Unlock", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -250,5 +250,9 @@ public class mainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    //Make back navigator didn't do anything
+    public void onBackPressed(){
+
     }
 }

@@ -1,11 +1,14 @@
 package com.example.lokerku;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -107,5 +110,36 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
+    }
+    //alert dialog from leaving application using back navigator
+    @Override
+    public void onBackPressed(){
+        // Alert Dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setPositiveButton("Request", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finishAffinity();
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).setTitle(Html.fromHtml("<font color = '#ffffff'>"+"<b>Exit App</b>"+"</font>")).
+                setMessage(Html.fromHtml("<font color = '#ffffff'>"+"Do You Want To Exit The Application?"+"</font>"));
+
+
+        AlertDialog dialog= builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_button_blue);
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.orangeMyLocker));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.orangeMyLocker));
+                dialog.setIcon(getResources().getDrawable(R.drawable.logo_mylocker));
+            }
+        });
+        dialog.show();
     }
 }
