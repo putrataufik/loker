@@ -18,32 +18,10 @@
         android:textColor="#004E64"
         android:textSize="40sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/email"
+        app:layout_constraintBottom_toTopOf="@+id/userNameLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="49dp"
-        android:layout_marginBottom="20dp"
-        android:ems="15"
-        android:fontFamily="@font/inter_bold"
-        android:hint="  Email"
-        android:inputType="textEmailAddress"
-        android:minHeight="48dp"
-        android:textColor="#004E64"
-        android:textColorHint="#004E64"
-        android:textColorLink="#004E64"
-        android:background="@drawable/tf_bg_login"
-        app:layout_constraintBottom_toTopOf="@+id/password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginPage" />
 
     <EditText
         android:id="@+id/password"
@@ -53,6 +31,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="49dp"
         android:layout_marginBottom="20dp"
+        android:background="@drawable/tf_bg_login"
         android:ems="15"
         android:fontFamily="@font/inter_bold"
         android:hint="  Password"
@@ -60,11 +39,10 @@
         android:minHeight="48dp"
         android:textColor="#357283"
         android:textColorHint="#004E64"
-        android:background="@drawable/tf_bg_login"
         app:layout_constraintBottom_toTopOf="@+id/loginButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
+        app:layout_constraintTop_toBottomOf="@+id/userNameLogin" />
 
     <Button
         android:id="@+id/loginButton"
@@ -110,4 +88,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_mylocker" />
+
+    <EditText
+        android:id="@+id/userNameLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="49dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/tf_bg_login"
+        android:ems="15"
+        android:fontFamily="@font/inter_bold"
+        android:hint="   Username"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:textColor="#004E64"
+        android:textColorHint="#004E64"
+        android:textColorLink="#004E64"
+        app:layout_constraintBottom_toTopOf="@+id/password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginPage" />
 </androidx.constraintlayout.widget.ConstraintLayout>

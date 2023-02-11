@@ -55,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
         // Set Theme to Light Mode
         getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
+        boolean request = UserDataSingleton.getInstance().isRequested();
+        System.out.println("request " + request);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -212,11 +215,18 @@ public class MainActivity extends AppCompatActivity {
                             // Save the status to False (OPEN)
                             editor.putBoolean("buttonStatus", false);
                             editor.apply();
+                            database.child("login").setValue(true);
+                            database.child("request").setValue(false);
+
+
 
                             // Set Status Value on Firebase to 0 (CLOSED)
                             database.child("statusValue").setValue(0).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
+
+                                    UserDataSingleton.getInstance().setRequested(false);
+
                                     Intent intent = new Intent(MainActivity.this, RequestActivity.class);
                                     startActivity(intent);
                                 }
@@ -230,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
                     }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
 
                         }
                     }).setTitle(Html.fromHtml("<font color = '#ffffff'>"+"<b>Apakah anda yakin ingin membuka locker Anda ?</b>"+"</font>"));
