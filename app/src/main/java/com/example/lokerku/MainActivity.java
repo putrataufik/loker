@@ -55,9 +55,6 @@ public class MainActivity extends AppCompatActivity {
         // Set Theme to Light Mode
         getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        boolean request = UserDataSingleton.getInstance().isRequested();
-        System.out.println("request " + request);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -109,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
             button.setText("LOCK");
         }
 
-
         // Set Status Value
         database.child("statusValue").setValue(0);
 
@@ -131,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         // Lock/Unlock Button
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,8 +134,8 @@ public class MainActivity extends AppCompatActivity {
                 // Status Changes
                 String statusChanges = statusText.getText().toString();
 
+                // Status Changes "OPEN"
                 if (statusChanges.equals("OPEN")) {
-
                     // Alert Dialog
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setPositiveButton("Lock", new DialogInterface.OnClickListener() {
@@ -182,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
                     }).setTitle(Html.fromHtml("<font color = '#ffffff'>"+"<b>Apakah anda yakin ingin mengunci locker Anda ?</b>"+"</font>")).
                             setMessage(Html.fromHtml("<font color = '#ffffff'>"+"Pastikan Anda sudah memasukan barang Anda dan Menutup locker dengan benar !!!"+"</font>"));
 
-
                     AlertDialog dialog= builder.create();
                     dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                         @Override
@@ -195,8 +189,9 @@ public class MainActivity extends AppCompatActivity {
                     });
                     dialog.show();
                 }
-                else {
 
+                // Status Changes "CLOSED"
+                else {
                     // Alert Dialog
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setPositiveButton("Unlock", new DialogInterface.OnClickListener() {
@@ -215,18 +210,15 @@ public class MainActivity extends AppCompatActivity {
                             // Save the status to False (OPEN)
                             editor.putBoolean("buttonStatus", false);
                             editor.apply();
+
+                            // Set The Login Status To True And The Request Status To False In Firebase
                             database.child("login").setValue(true);
                             database.child("request").setValue(false);
-
-
 
                             // Set Status Value on Firebase to 0 (CLOSED)
                             database.child("statusValue").setValue(0).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-
-                                    UserDataSingleton.getInstance().setRequested(false);
-
                                     Intent intent = new Intent(MainActivity.this, RequestActivity.class);
                                     startActivity(intent);
                                 }
