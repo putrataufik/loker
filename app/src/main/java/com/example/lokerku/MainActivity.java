@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.renderscript.Sampler;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
@@ -31,8 +32,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
     // Declare SharedPreferences
     private SharedPreferences lastClick;
     private SharedPreferences.Editor editor;
+    private int [] arrRand = new int [2];
+
+    private String noLoker = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +80,45 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         stopwatch = findViewById(R.id.stopwatch);
 
-        // Randomize Locker Number
-        Random rand = new Random();
-        int randomNum = rand.nextInt((10 - 1) + 1) + 1;
-        lockerNumber.setText(String.valueOf(randomNum));
+        Bundle extras = getIntent().getExtras();
+
+        noLoker = extras.getString("noLoker");
+        System.out.println(noLoker+"ini no lokernya bro");
+
+//        database.child("Loker").child("loker_1").child("availability").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                int availability_1 = Integer.valueOf(snapshot.getValue().toString());
+//                System.out.println("availability 1 " + availability_1);
+//                arrRand [0] = availability_1;
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+
+        database.child("Loker").child("loker_2").child("availability").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    int availability_2 = Integer.valueOf(snapshot.getValue().toString());
+                    arrRand [1] = availability_2;
+                    System.out.println("availability 2 " + availability_2);
+                    System.out.println("arrays Main =" + Arrays.toString(arrRand));
+                    lockerNumber.setText(noLoker);
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
         // Set Current Date
         Date currentTime = Calendar.getInstance().getTime();
@@ -219,8 +261,8 @@ public class MainActivity extends AppCompatActivity {
                             database.child("statusValue").setValue(0).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    Intent intent = new Intent(MainActivity.this, RequestActivity.class);
-                                    startActivity(intent);
+                                    database.child("Loker").child("loker_"+noLoker).child("availability").setValue(0);
+                                    navigateUpTo(new Intent(getBaseContext(), RequestActivity.class));
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -252,5 +294,79 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        UI();
+    }
+
+    private void UI(){
+        if(arrRand[0] == 0 && arrRand[1] == 0) {
+            Random rand = new Random();
+            int randomIndex = rand.nextInt(2);
+            while (arrRand[randomIndex] == 1) {
+                randomIndex = rand.nextInt(2);
+            }
+            database.child("no_loker").setValue(randomIndex +1);
+//            database.child("no_loker").addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    Object no_loker = Integer.valueOf(snapshot.getValue().toString());
+//                    String no_loker_string = String.valueOf(no_loker);
+//
+//                    System.out.println("no_loker = " + no_loker);
+//                    lockerNumber.setText(no_loker_string);
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+
+
+            System.out.println("Locker yang dipilih adalah locker ke-" + (randomIndex + 1));
+
+
+        }
+        else if(arrRand[0] == 0 && arrRand[1] == 1){
+            System.out.println("Locker yang dipilih: 1");
+            database.child("no_loker").setValue(1);
+//            database.child("no_loker").addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    Object no_loker = Integer.valueOf(snapshot.getValue().toString());
+//                    String no_loker_string = String.valueOf(no_loker);
+//
+//                    System.out.println("no_loker if no loker 1 aja = " + no_loker);
+//                    lockerNumber.setText(no_loker_string);
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+
+        }else if(arrRand[0] == 1 && arrRand[1] == 0){
+            System.out.println("Locker yang dipilih: 2");
+            database.child("no_loker").setValue(2);
+//            database.child("no_loker").addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    Object no_loker = Integer.valueOf(snapshot.getValue().toString());
+//                    String no_loker_string = String.valueOf(no_loker);
+//
+//                    System.out.println("no_loker if locker 2 aja = " + no_loker);
+//                    lockerNumber.setText(no_loker_string);
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+
+        }else{
+            System.out.println("Locker yang dipilih: tidak ada locker yang tersedia");
+        }
     }
 }
