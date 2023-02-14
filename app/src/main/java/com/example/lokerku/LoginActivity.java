@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -54,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         // Declare
         EditText email = findViewById(R.id.userNameLogin);
         EditText password = findViewById(R.id.password);
-        Button loginButton = findViewById(R.id.loginButton);
+        Button loginButton = findViewById(R.id.loginBTN);
         Button registerButton = findViewById(R.id.registerButton);
 
         // Login Button

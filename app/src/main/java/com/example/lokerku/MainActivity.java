@@ -51,11 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
     // Declare SharedPreferences
     private SharedPreferences lastClick;
+    private SharedPreferences currentLockerNumber;
     private SharedPreferences.Editor editor;
-    private int [] arrRand = new int [2];
-
-    private String noLoker = "";
-
+    private SharedPreferences.Editor editor2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +67,14 @@ public class MainActivity extends AppCompatActivity {
         lastClick = getSharedPreferences("status", Context.MODE_PRIVATE);
         editor = lastClick.edit();
 
+        // Get Current Locker Number With SharedPreferences
+        currentLockerNumber = getSharedPreferences("LockerNum", Context.MODE_PRIVATE);
+        editor2 = currentLockerNumber.edit();
+
         final boolean prevStatus = lastClick.getBoolean("buttonStatus", false);
         final long prevTime = lastClick.getLong("time", 0);
+
+        final String noLoker;
 
         // FindViewById
         statusNumber = findViewById(R.id.statusNumber);
@@ -80,44 +84,28 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         stopwatch = findViewById(R.id.stopwatch);
 
-        Bundle extras = getIntent().getExtras();
+        // If noLoker Intent Is Not Null, Then Save With SharedPreferences
+        if (getIntent().getStringExtra("noLoker") != null) {
 
-        noLoker = extras.getString("noLoker");
-        System.out.println(noLoker+"ini no lokernya bro");
+            // Get Locker Number With Intent From RequestActivity
+            noLoker = getIntent().getStringExtra("noLoker");
+            editor2.putString("LockerNumber", noLoker);
+            editor2.apply();
 
-//        database.child("Loker").child("loker_1").child("availability").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                int availability_1 = Integer.valueOf(snapshot.getValue().toString());
-//                System.out.println("availability 1 " + availability_1);
-//                arrRand [0] = availability_1;
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
+            // Set Locker Number Text
+            lockerNumber.setText(noLoker);
+        }
 
-        database.child("Loker").child("loker_2").child("availability").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    int availability_2 = Integer.valueOf(snapshot.getValue().toString());
-                    arrRand [1] = availability_2;
-                    System.out.println("availability 2 " + availability_2);
-                    System.out.println("arrays Main =" + Arrays.toString(arrRand));
-                    lockerNumber.setText(noLoker);
+        // If noLoker Is Null, Get From SharedPreferences
+        else {
+            noLoker = currentLockerNumber.getString("LockerNumber", "");
 
+            // Set Locker Number Text
+            lockerNumber.setText(noLoker);
+        }
 
+        System.out.println("noLoker Main: " + noLoker);
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
 
 
         // Set Current Date
@@ -176,10 +164,11 @@ public class MainActivity extends AppCompatActivity {
                 // Status Changes
                 String statusChanges = statusText.getText().toString();
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
                 // Status Changes "OPEN"
                 if (statusChanges.equals("OPEN")) {
                     // Alert Dialog
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setPositiveButton("Lock", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -188,6 +177,9 @@ public class MainActivity extends AppCompatActivity {
                             statusText.setText("CLOSED");
                             statusText.setTextColor(Color.parseColor("#FFE91E63"));
                             button.setText("UNLOCK");
+
+                            // Set Status In Firebase To 1
+                            database.child("Loker").child("loker_" + noLoker).child("status").setValue("1");
 
                             // Start the stopwatch
                             stopwatch.setBase(SystemClock.elapsedRealtime());
@@ -233,9 +225,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 // Status Changes "CLOSED"
-                else {
+                else if (statusChanges.equals("CLOSED")){
                     // Alert Dialog
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setPositiveButton("Unlock", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -244,6 +235,12 @@ public class MainActivity extends AppCompatActivity {
                             statusText.setText("OPEN");
                             statusText.setTextColor(Color.parseColor("#43A047"));
                             button.setText("LOCK");
+
+                            // Set Availability In Firebase to 1
+                            database.child("Loker").child("loker_" + noLoker).child("availability").setValue("1");
+
+                            // Set Status In Firebase to 0
+                            database.child("Loker").child("loker_" + noLoker).child("status").setValue("0");
 
                             // Stop the Stopwatch
                             stopwatch.stop();
@@ -257,25 +254,14 @@ public class MainActivity extends AppCompatActivity {
                             database.child("login").setValue(true);
                             database.child("request").setValue(false);
 
-                            // Set Status Value on Firebase to 0 (CLOSED)
-                            database.child("statusValue").setValue(0).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    database.child("Loker").child("loker_"+noLoker).child("availability").setValue(0);
-                                    navigateUpTo(new Intent(getBaseContext(), RequestActivity.class));
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(MainActivity.this, "Failed to Unlock", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                            Intent intent = new Intent(MainActivity.this, RequestActivity.class);
+                            intent.putExtra("loker", noLoker);
+                            startActivity(intent);
                         }
                     }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
-
                         }
                     }).setTitle(Html.fromHtml("<font color = '#ffffff'>"+"<b>Apakah anda yakin ingin membuka locker Anda ?</b>"+"</font>"));
 
@@ -294,79 +280,5 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        UI();
-    }
-
-    private void UI(){
-        if(arrRand[0] == 0 && arrRand[1] == 0) {
-            Random rand = new Random();
-            int randomIndex = rand.nextInt(2);
-            while (arrRand[randomIndex] == 1) {
-                randomIndex = rand.nextInt(2);
-            }
-            database.child("no_loker").setValue(randomIndex +1);
-//            database.child("no_loker").addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    Object no_loker = Integer.valueOf(snapshot.getValue().toString());
-//                    String no_loker_string = String.valueOf(no_loker);
-//
-//                    System.out.println("no_loker = " + no_loker);
-//                    lockerNumber.setText(no_loker_string);
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                }
-//            });
-
-
-            System.out.println("Locker yang dipilih adalah locker ke-" + (randomIndex + 1));
-
-
-        }
-        else if(arrRand[0] == 0 && arrRand[1] == 1){
-            System.out.println("Locker yang dipilih: 1");
-            database.child("no_loker").setValue(1);
-//            database.child("no_loker").addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    Object no_loker = Integer.valueOf(snapshot.getValue().toString());
-//                    String no_loker_string = String.valueOf(no_loker);
-//
-//                    System.out.println("no_loker if no loker 1 aja = " + no_loker);
-//                    lockerNumber.setText(no_loker_string);
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                }
-//            });
-
-        }else if(arrRand[0] == 1 && arrRand[1] == 0){
-            System.out.println("Locker yang dipilih: 2");
-            database.child("no_loker").setValue(2);
-//            database.child("no_loker").addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    Object no_loker = Integer.valueOf(snapshot.getValue().toString());
-//                    String no_loker_string = String.valueOf(no_loker);
-//
-//                    System.out.println("no_loker if locker 2 aja = " + no_loker);
-//                    lockerNumber.setText(no_loker_string);
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                }
-//            });
-
-        }else{
-            System.out.println("Locker yang dipilih: tidak ada locker yang tersedia");
-        }
     }
 }

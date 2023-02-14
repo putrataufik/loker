@@ -22,14 +22,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class RequestActivity extends AppCompatActivity {
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
-    private int [] arrRand = new int [2];
+    private String[] arrRand = new String[2];
 
-    public int noLoker;
+    public String noLoker;
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
     @Override
@@ -37,16 +38,18 @@ public class RequestActivity extends AppCompatActivity {
         // Set Theme to Light Mode
         getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
+        System.out.println("noLoker Request Awal: " + noLoker);
+
         // Get request Boolean from Firebase
         database.child("request").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String request = snapshot.getValue().toString();
 
-//                if (request.equals("true")){
-//                    Intent intent = new Intent(RequestActivity.this, MainActivity.class);
-//                    startActivity(intent);
-//                }
+                if (request.equals("true")) {
+                    Intent intent = new Intent(RequestActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
             }
 
             @Override
@@ -57,6 +60,12 @@ public class RequestActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request);
+
+        if (getIntent().getStringExtra("loker") != null) {
+            String loker = getIntent().getStringExtra("loker");
+            System.out.println("loker: " + loker);
+            database.child("Loker").child("loker_" + loker).child("availability").setValue("1");
+        }
 
         // Define SharedPreferences
         preferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
@@ -94,46 +103,41 @@ public class RequestActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //check loker
-                        database.child("Loker").child("loker_1").child("availability").addValueEventListener(new ValueEventListener() {
+                        database.child("Loker").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                int availability_1 = Integer.valueOf(snapshot.getValue().toString());
-                                System.out.println("availability 1 Req " + availability_1);
-                                arrRand [0] = availability_1;
-                            }
+                                arrRand[0] = snapshot.child("loker_1").child("availability").getValue().toString();
+                                arrRand[1] = snapshot.child("loker_2").child("availability").getValue().toString();
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                                System.out.println("Arrays Request: " + Arrays.toString(arrRand));
 
-                            }
-                        });
+                                if (arrRand[0].equals("1")) {
+                                    noLoker = "1";
 
-                        database.child("Loker").child("loker_2").child("availability").addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                int availability_2 = Integer.valueOf(snapshot.getValue().toString());
-                                System.out.println("availability 2_Req " + availability_2);
-                                arrRand [1] = availability_2;
+                                    database.child("Loker").child("loker_" + noLoker).child("availability").setValue("0");
 
-                                System.out.println("index 1 = "+ arrRand[1]);
-                                if (arrRand [0] == 1 && arrRand[1] ==  1) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(RequestActivity.this);
-                                    builder.setMessage("Locker Full")
-                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    // Do nothing
-                                                }
-                                            });
-                                    AlertDialog alert = builder.create();
-                                    alert.show();
-                                } else {
-                                    // Set The Request Status In Firebase To True
-//                                    database.child("request").setValue(true);
-//
-//                                    Intent intent = new Intent(RequestActivity.this, MainActivity.class);
-//                                    startActivity(intent);
+                                    Intent intent = new Intent(RequestActivity.this, MainActivity.class);
+                                    intent.putExtra("noLoker", noLoker);
+                                    startActivity(intent);
+                                }
+                                if (arrRand[1].equals("1")) {
+                                    noLoker = "2";
+
+                                    database.child("Loker").child("loker_" + noLoker).child("availability").setValue("0");
+
+                                    Intent intent = new Intent(RequestActivity.this, MainActivity.class);
+                                    intent.putExtra("noLoker", noLoker);
+                                    startActivity(intent);
                                 }
 
+                                if (arrRand[0].equals("0") && arrRand[1].equals("0")) {
+                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+                                        }
+                                    }).setTitle("Locker Full");
+                                }
                             }
 
                             @Override
@@ -142,23 +146,8 @@ public class RequestActivity extends AppCompatActivity {
                             }
                         });
 
-                        System.out.println("index 0 = "+ arrRand[0]);
-
-                        System.out.println("arrays =" + Arrays.toString(arrRand));
-                        // // Set The Request Status In Firebase To True
+                        // Set The Request Status In Firebase To True
                         database.child("request").setValue(true);
-                        if (arrRand[0] == 0){
-                            database.child("Loker").child("loker_1").child("availability").setValue(1);
-                            noLoker = 1;
-
-                        }else if (arrRand[1] == 0){
-                            database.child("Loker").child("loker_2").child("availability").setValue(1);
-                            noLoker = 2;
-                        }
-
-                        Intent intent = new Intent(RequestActivity.this, MainActivity.class);
-                        intent.putExtra("noLoker",String.valueOf(noLoker));
-                        startActivity(intent);
 
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
