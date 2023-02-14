@@ -6,15 +6,19 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class History extends AppCompatActivity {
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-    ListView simpleList;
-    String countryList[] = {"India", "China", "australia", "Portugle", "America", "NewZealand"};
+public class History extends AppCompatActivity {
+    private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
     @Override   protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);      setContentView(R.layout.activity_history);
-        simpleList = (ListView)findViewById(R.id.historuListView);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.activity_history, R.id.textView, countryList);
-        simpleList.setAdapter(arrayAdapter);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_history);
+
+
+
+
+
     }
 }

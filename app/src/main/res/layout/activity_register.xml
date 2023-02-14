@@ -58,7 +58,7 @@
 
 
     <EditText
-        android:id="@+id/emailRegister"
+        android:id="@+id/usernameRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
@@ -93,7 +93,7 @@
         android:textColorHint="#004E64"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailRegister" />
+        app:layout_constraintTop_toBottomOf="@+id/usernameRegister" />
 
     <EditText
         android:id="@+id/passwordConfirmationRegister"

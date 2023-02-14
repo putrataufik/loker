@@ -30,11 +30,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Declare
         EditText name = findViewById(R.id.nameRegister);
-        EditText email = findViewById(R.id.emailRegister);
+
         EditText password = findViewById(R.id.passwordRegister);
         EditText passwordConfirm = findViewById(R.id.passwordConfirmationRegister);
         Button registerAccButton = findViewById(R.id.registerAccButton);
-
+        EditText username = findViewById(R.id.usernameRegister);
         registerAccButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     // Get Name, Email and Password Text
                     String getName = name.getText().toString();
-                    String getEmail = email.getText().toString();
+                    String getUsername = username.getText().toString();
                     String getPassword = password.getText().toString();
 
                     try {
@@ -59,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }
 
                         // Send data to Firebase
-                        database.child("user_data").push().setValue(new ModelRegister(getName, getEmail, hashedPassword.toString()));
+                        database.child("user_data").push().setValue(new ModelRegister(getName, getUsername, hashedPassword.toString()));
 
                     } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
                         System.err.println("Error: " + e.getMessage());

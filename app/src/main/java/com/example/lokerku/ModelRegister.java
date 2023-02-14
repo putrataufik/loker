@@ -2,15 +2,15 @@ package com.example.lokerku;
 
 public class ModelRegister {
     private String name;
-    private String email;
+    private String username;
     private String password;
 
     public ModelRegister() {}
 
-    public ModelRegister(String name, String email, String password) {
+    public ModelRegister(String name, String username, String password) {
 
         this.name = name;
-        this.email = email;
+        this.username = username;
         this.password = password;
     }
 
@@ -22,12 +22,12 @@ public class ModelRegister {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         // Declare
-        EditText email = findViewById(R.id.userNameLogin);
+        EditText username = findViewById(R.id.userNameLogin);
         EditText password = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.loginButton);
         Button registerButton = findViewById(R.id.registerButton);
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         // Get email & password text
-                        String getEmail = email.getText().toString();
+                        String getUsername = username.getText().toString();
                         String getPassword = password.getText().toString();
 
                         try {
@@ -87,13 +87,13 @@ public class LoginActivity extends AppCompatActivity {
                             for (DataSnapshot item : snapshot.getChildren()) {
                                 ModelRegister modelRegister = item.getValue(ModelRegister.class);
 
-                                if (getEmail.isEmpty()) {
-                                    email.setError("Masukkan Email!");
+                                if (getUsername.isEmpty()) {
+                                    username.setError("Masukkan Username!");
                                 }
                                 else if (getPassword.isEmpty()) {
                                     password.setError("Masukkan Password");
                                 }
-                                else if (getEmail.equals(modelRegister.getEmail()) && hashedPassword.toString().equals(modelRegister.getPassword())) {
+                                else if (getUsername.equals(modelRegister.getUsername()) && hashedPassword.toString().equals(modelRegister.getPassword())) {
                                     String name = modelRegister.getName();
                                     UserDataSingleton.getInstance().setName(name);
 
