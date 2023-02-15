@@ -3,7 +3,8 @@ package com.example.lokerku;
 public class UserDataSingleton {
     private static UserDataSingleton instance;
     private String name;
-    private boolean requested;
+    private String username;
+    private int[] arrRand = new int [2];
 
     private UserDataSingleton() {}
 
@@ -18,15 +19,23 @@ public class UserDataSingleton {
         return name;
     }
 
-    public boolean isRequested() {
-        return requested;
-    }
-
-    public void setRequested(boolean requested) {
-        this.requested = requested;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public int[] getArrRand() {
+        return arrRand;
+    }
+
+    public void setArrRand(int[] arrRand) {
+        this.arrRand = arrRand;
     }
 }

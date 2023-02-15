@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,7 +13,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.renderscript.Sampler;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
@@ -30,34 +28,33 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
-    // Declare Items
+    // Declare Widgets
     private final Handler handler = new Handler();
-    private TextView statusNumber;
     private TextView lockerNumber;
     private TextView currentDate;
     private TextView statusText;
     private Button button;
     private Chronometer stopwatch;
+
+    // Declare DatabaseReference Firebase
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
     // Declare SharedPreferences
     private SharedPreferences lastClick;
     private SharedPreferences.Editor editor;
-    private int [] arrRand = new int [2];
 
+    // Declare Primitive
+    private int [] arrRand = new int [2];
     private String noLoker = "";
-    int randomIndex = 0;
+    private int randomIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,22 +68,23 @@ public class MainActivity extends AppCompatActivity {
         lastClick = getSharedPreferences("status", Context.MODE_PRIVATE);
         editor = lastClick.edit();
 
+        // Get The Previous Status And Stopwatch With SharedPreferences
         final boolean prevStatus = lastClick.getBoolean("buttonStatus", false);
         final long prevTime = lastClick.getLong("time", 0);
 
         // FindViewById
-        statusNumber = findViewById(R.id.statusNumber);
         lockerNumber = findViewById(R.id.lockerNumber);
         currentDate = findViewById(R.id.CurrentDate);
         statusText = findViewById(R.id.statusText);
         button = findViewById(R.id.button);
         stopwatch = findViewById(R.id.stopwatch);
 
-        Intent intent = getIntent();
-        arrRand = intent.getIntArrayExtra("arrRand");
+        // Get The Locker Availability In An Array With Singleton
+        if (UserDataSingleton.getInstance().getArrRand() != null) {
+            arrRand = UserDataSingleton.getInstance().getArrRand();
+        }
 
-        System.out.println("arrRand: " + Arrays.toString(arrRand));
-
+        // Method To Random The Locker Number And Set The Locker Number Text
         UI();
 
         // Set Current Date
@@ -99,9 +97,8 @@ public class MainActivity extends AppCompatActivity {
         TimeZone timeZone = TimeZone.getTimeZone("GMT+8");
         Date currentTimes = Calendar.getInstance(timeZone).getTime();
         SimpleDateFormat dateFormats = new SimpleDateFormat("EEEE, dd-MM-YYYY HH:mm:ss");
-        dateFormat.setTimeZone(timeZone);
+        dateFormats.setTimeZone(timeZone);
         String dateForDatabase = dateFormats.format(currentTimes);
-
 
         // Set Last Click
         if (prevStatus == true) {
@@ -113,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    // Set The Stopwatch To The Previous Time
                     stopwatch.setBase(prevTime);
                     stopwatch.start();
                     handler.postDelayed(this, 1000);
@@ -120,31 +118,11 @@ public class MainActivity extends AppCompatActivity {
             }, 1000);
         }
         else {
+            // Set The Status Text To "OPEN" And Set The Button Text To "LOCK"
             statusText.setText("OPEN");
             statusText.setTextColor(Color.parseColor("#2AFF00"));
             button.setText("LOCK");
         }
-
-        // Set Status Value
-        database.child("statusValue").setValue(0);
-
-        // Get data from Firebase and set statusNumber
-        database.child("statusValue").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.getValue().toString().equals("1")) {
-                    statusNumber.setText("1");
-                }
-                else if (snapshot.getValue().toString().equals("0")) {
-                    statusNumber.setText("0");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
 
         // Lock/Unlock Button
         button.setOnClickListener(new View.OnClickListener() {
@@ -160,11 +138,9 @@ public class MainActivity extends AppCompatActivity {
                     builder.setPositiveButton("Lock", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-
                             // Set Status to CLOSED
                             statusText.setText("CLOSED");
                             statusText.setTextColor(Color.parseColor("#FFE91E63"));
-                            database.child("Loker").child("loker_"+(randomIndex+1)).child("status").setValue(1);
                             button.setText("UNLOCK");
 
                             // Start the stopwatch
@@ -176,18 +152,9 @@ public class MainActivity extends AppCompatActivity {
                             editor.putLong("time", SystemClock.elapsedRealtime());
                             editor.apply();
 
-                            // Set Status Value on Firebase to 1 (OPEN)
-                            database.child("statusValue").setValue(1).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    Toast.makeText(MainActivity.this, "Locked", Toast.LENGTH_SHORT).show();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(MainActivity.this, "Failed to Lock", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                            // Set Status In Firebase To 1 (Closed)
+                            database.child("Loker").child("loker_"+(randomIndex+1)).child("status").setValue(1);
+
                         }
                     }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
@@ -217,12 +184,9 @@ public class MainActivity extends AppCompatActivity {
                     builder.setPositiveButton("Unlock", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-
                             // Set Status to OPEN
                             statusText.setText("OPEN");
                             statusText.setTextColor(Color.parseColor("#43A047"));
-                            database.child("Loker").child("loker_"+(randomIndex+1)).child("status").setValue(0);
-
                             button.setText("LOCK");
 
                             // Stop the Stopwatch
@@ -233,36 +197,58 @@ public class MainActivity extends AppCompatActivity {
                             editor.putBoolean("buttonStatus", false);
                             editor.apply();
 
-                            // Set The Login Status To True And The Request Status To False In Firebase
-                            database.child("login").setValue(true);
-                            database.child("request").setValue(false);
+                            // Get Singleton
+                            if (UserDataSingleton.getInstance().getUsername() != null) {
+                                String username = UserDataSingleton.getInstance().getUsername();
+                                editor.putString("username", username);
+                                editor.apply();
 
-                            // Set Status Value on Firebase to 0 (CLOSED)
-                            database.child("statusValue").setValue(0).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    database.child("Loker").child("loker_"+(randomIndex+1)).child("availability").setValue(0);
+                                // Set The Login Status In Firebase To True
+                                database.child("user_data").child(username).child("login").setValue(true);
 
-                                    database.child("History").push().setValue(new ModelHistory("-NN7dCDgMf1NWOMuM3I_",dateForDatabase, (randomIndex+1)));
+                                // Set The Request Status In Firebase To False
+                                database.child("user_data").child(username).child("request").setValue(false);
 
-                                    navigateUpTo(new Intent(getBaseContext(), RequestActivity.class));
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(MainActivity.this, "Failed to Unlock", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                                // Set The Locker Availability In Firebase To 0 (Open)
+                                database.child("Loker").child("loker_"+(randomIndex+1)).child("availability").setValue(0);
+
+                                // Set The Status In Firebase To 0 (Open)
+                                database.child("Loker").child("loker_"+(randomIndex+1)).child("status").setValue(0);
+
+                                // Back To Request Page
+                                Intent intent = new Intent(MainActivity.this, RequestActivity.class);
+                                startActivity(intent);
+                            }
+                            else {
+                                String username = lastClick.getString("username", "");
+
+                                // Set The Login Status In Firebase To True
+                                database.child("user_data").child(username).child("login").setValue(true);
+
+                                // Set The Request Status In Firebase To False
+                                database.child("user_data").child(username).child("request").setValue(false);
+
+                                // Set The Locker Availability In Firebase To 0 (Open)
+                                database.child("Loker").child("loker_"+(randomIndex+1)).child("availability").setValue(0);
+
+                                // Set The Status In Firebase To 0 (Open)
+                                database.child("Loker").child("loker_"+(randomIndex+1)).child("status").setValue(0);
+
+                                // Back To Request Page
+                                Intent intent = new Intent(MainActivity.this, RequestActivity.class);
+                                startActivity(intent);
+                            }
+
+
                         }
                     }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
-
                         }
                     }).setTitle(Html.fromHtml("<font color = '#ffffff'>"+"<b>Apakah anda yakin ingin membuka locker Anda ?</b>"+"</font>"));
 
-
+                    // Show The Alert Dialog
                     AlertDialog dialog= builder.create();
                     dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                         @Override
@@ -279,6 +265,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // Method To Random The Locker Number And Set The Locker Number Text
     private void UI(){
         database.child("Loker").child("loker_1").child("availability").addValueEventListener(new ValueEventListener() {
             @Override
@@ -286,6 +273,12 @@ public class MainActivity extends AppCompatActivity {
                 int availability_1 = Integer.valueOf(snapshot.getValue().toString());
                 arrRand [0] = availability_1;
                 lockerNumber.setText(noLoker);
+
+                if (UserDataSingleton.getInstance().getUsername() != null) {
+                    String username = UserDataSingleton.getInstance().getUsername();
+
+                    database.child("user_data").child(username).child("request").setValue(true);
+                }
             }
 
             @Override
@@ -322,6 +315,8 @@ public class MainActivity extends AppCompatActivity {
                 noLoker = "1";
 
                 database.child("Loker").child("loker_1").child("availability").setValue(1);
+                database.child("Loker").child("loker_1").child("status").setValue(0);
+
                 database.child("no_loker").setValue(1);
 
                 System.out.println("Locker yang dipilih: 1");
@@ -331,6 +326,8 @@ public class MainActivity extends AppCompatActivity {
                 noLoker = "2";
 
                 database.child("Loker").child("loker_2").child("availability").setValue(1);
+                database.child("Loker").child("loker_2").child("status").setValue(0);
+
                 database.child("no_loker").setValue(2);
 
                 System.out.println("Locker yang dipilih: 2");
@@ -342,6 +339,8 @@ public class MainActivity extends AppCompatActivity {
                 noLoker = "1";
 
                 database.child("Loker").child("loker_1").child("availability").setValue(1);
+                database.child("Loker").child("loker_1").child("status").setValue(0);
+
                 database.child("no_loker").setValue(1);
 
                 System.out.println("Locker yang dipilih: 1");
@@ -353,6 +352,8 @@ public class MainActivity extends AppCompatActivity {
                 noLoker = "2";
 
                 database.child("Loker").child("loker_2").child("availability").setValue(1);
+                database.child("Loker").child("loker_2").child("status").setValue(0);
+
                 database.child("no_loker").setValue(2);
 
                 System.out.println("Locker yang dipilih: 2");

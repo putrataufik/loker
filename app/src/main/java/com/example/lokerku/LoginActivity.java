@@ -4,13 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,36 +27,48 @@ import java.security.NoSuchAlgorithmException;
 
 public class LoginActivity extends AppCompatActivity {
 
+    // Declare DatabaseReference Firebase
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+
+    // Declare SharedPreferences
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Set Theme to Light Mode
         getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        // Get login Boolean From Firebase
-        database.child("login").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String login = snapshot.getValue().toString();
+        // Get Last Click With SharedPreferences
+        sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
-                if (login.equals("true")) {
-                    Intent intent = new Intent(LoginActivity.this, RequestActivity.class);
-                    startActivity(intent);
+        // Declare Final String
+        final String username;
+
+        if (UserDataSingleton.getInstance().getUsername() == null) {
+            // Get The Previous Username With SharedPreferences
+            username = sharedPreferences.getString("username", "p");
+
+            // Get login Boolean From Firebase
+            database.child("user_data").child(username).child("login").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    String login = task.getResult().getValue().toString();
+
+                    if (login.equals("true")) {
+                        Intent intent = new Intent(LoginActivity.this, RequestActivity.class);
+                        startActivity(intent);
+                    }
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+            });
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Declare
-        EditText username = findViewById(R.id.userNameLogin);
+        // Declare Widgets
+        EditText usernameLogin = findViewById(R.id.userNameLogin);
         EditText password = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.loginButton);
         Button registerButton = findViewById(R.id.registerButton);
@@ -65,9 +81,8 @@ public class LoginActivity extends AppCompatActivity {
                 database.child("user_data").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                         // Get email & password text
-                        String getUsername = username.getText().toString();
+                        String getUsername = usernameLogin.getText().toString();
                         String getPassword = password.getText().toString();
 
                         try {
@@ -88,17 +103,26 @@ public class LoginActivity extends AppCompatActivity {
                                 ModelRegister modelRegister = item.getValue(ModelRegister.class);
 
                                 if (getUsername.isEmpty()) {
-                                    username.setError("Masukkan Username!");
+                                    usernameLogin.setError("Masukkan Username!");
                                 }
                                 else if (getPassword.isEmpty()) {
                                     password.setError("Masukkan Password");
                                 }
                                 else if (getUsername.equals(modelRegister.getUsername()) && hashedPassword.toString().equals(modelRegister.getPassword())) {
                                     String name = modelRegister.getName();
+                                    String username = modelRegister.getUsername();
+
+                                    // Set Name And Username To Singleton
                                     UserDataSingleton.getInstance().setName(name);
+                                    UserDataSingleton.getInstance().setUsername(username);
+
+                                    // Save The Username With SharedPreferences
+                                    editor.putString("username", username);
+                                    editor.putBoolean("login", true);
+                                    editor.apply();
 
                                     // Set The Login Status In Firebase To True
-                                    database.child("login").setValue(true);
+                                    database.child("user_data").child(username).child("login").setValue(true);
 
                                     Intent intent = new Intent(LoginActivity.this, RequestActivity.class);
                                     startActivity(intent);
@@ -128,3 +152,5 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 }
+
+
